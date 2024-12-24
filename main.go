@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -50,12 +51,13 @@ func main() {
 			defer f.Close()
 		}
 	}
-
+	re := regexp.MustCompile(`\x1B\[[0-?9;]*[mK]`)
 	// read the lines, append and output them if they're new
 	sc := bufio.NewScanner(os.Stdin)
 
 	for sc.Scan() {
 		line := sc.Text()
+		line = re.ReplaceAllString(line, "")
 		if trim {
 			line = strings.TrimSpace(line)
 		}
